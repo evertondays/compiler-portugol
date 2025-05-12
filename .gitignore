@@ -1,0 +1,37 @@
+# Executable
+main
+
+# CMake build directories
+cmake-build-*/
+build/
+CMakeFiles/
+CMakeCache.txt
+Makefile
+cmake_install.cmake
+compile_commands.json
+
+# CLion project files
+.idea/
+*.iml
+
+# Compiled object files, binaries, libraries
+*.o
+*.obj
+*.so
+*.dll
+*.exe
+*.out
+*.a
+*.lib
+
+# Logs and temporary files
+*.log
+*.tmp
+
+# OS-specific
+.DS_Store
+Thumbs.db
+
+# User-specific
+*.swp
+*~
