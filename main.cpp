@@ -68,12 +68,14 @@ Token identify_token(std::string word, int line, int column) {
         }
     }
 
-    token.value = word;
-    token.type = token_type;
-    token.line = line;
-    token.column = column;
+    return generate_token(token_type, word, line, column);
+}
 
-    return token;
+void flush_word(std::vector<Token>& tokens, std::string& word, int line_count, int column_count) {
+    if (!word.empty()) {
+        tokens.push_back(identify_token(word, line_count, column_count));
+        word.clear();
+    }
 }
 
 bool token_has_value(const std::string& type) {
@@ -85,34 +87,62 @@ std::vector<Token> lexer(std::ifstream& source_file) {
 
     std::string line;
     int line_count = 1;
+    bool antesessor_is_less_than = false;
 
     while (std::getline(source_file, line)) {
         int column_count = 0;
         std::string word;
 
-        for (char caracter : line) {
+        for (char character : line) {
             column_count++;
 
-            if (caracter == ' ' || caracter == '\t') {
-                if (!word.empty()) {
-                    tokens.push_back(identify_token(word, line_count, column_count - word.length()));
-                    word.clear();
-                }
-            } else if (caracter == ';') {
-                if (!word.empty()) {
-                    tokens.push_back(identify_token(word, line_count, column_count - word.length()));
-                    word.clear();
-                }
-                tokens.push_back(generate_token("SEMICOLON", "", line_count, column_count));
-            } else {
-                word += caracter;
+            if (character == ' ') {
+                flush_word(tokens, word, line_count, column_count);
+                continue;
             }
+
+            switch (character) {
+                case '/':
+                case '+':
+                case '*':
+                case '(':
+                case ')':
+                case ';':
+                flush_word(tokens, word, line_count, column_count);
+                    word += character;
+                    tokens.push_back(identify_token(word, line_count, column_count));
+                    word.clear();
+                    continue;
+            }
+
+            if (antesessor_is_less_than) {
+                antesessor_is_less_than = false;
+
+                if (!word.empty()) {
+                    word.pop_back();
+                    flush_word(tokens, word, line_count, column_count);
+                }
+
+                if (character == '>' || character == '=' || character == '-') {
+                    word = "<";
+                    word += character;
+                    flush_word(tokens, word, line_count, column_count);
+                } else {
+                    word = "<";
+                    flush_word(tokens, word, line_count, column_count);
+                }
+
+                continue;
+            }
+
+            if (character == '<') {
+                antesessor_is_less_than = true;
+            }
+
+            word += character;
         }
 
-        if (!word.empty()) {
-            tokens.push_back(identify_token(word, line_count, column_count - word.length()));
-        }
-
+        flush_word(tokens, word, line_count, column_count);
         tokens.push_back(generate_token("ENDLINE", "", line_count, column_count));
         line_count++;
     }
