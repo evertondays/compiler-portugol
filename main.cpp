@@ -79,7 +79,7 @@ void flush_word(std::vector<Token>& tokens, std::string& word, int line_count, i
 }
 
 bool token_has_value(const std::string& type) {
-    return type == "NUMINT" || type == "ID" || type == "UNKNOWN";
+    return type == "NUMINT" || type == "ID" || type == "UNKNOWN" || type == "STRING";
 }
 
 std::vector<Token> lexer(std::ifstream& source_file) {
@@ -92,9 +92,25 @@ std::vector<Token> lexer(std::ifstream& source_file) {
     while (std::getline(source_file, line)) {
         int column_count = 0;
         std::string word;
+        bool is_string = false;
 
         for (char character : line) {
             column_count++;
+
+            if (is_string) {
+                word += character;
+                if (character == '"') {
+                    flush_word(tokens, word, line_count, column_count);
+                    is_string = false;
+                }
+                continue;
+            }
+
+            if (character == '"') {
+                word += character;
+                is_string = true;
+                continue;
+            }
 
             if (character == ' ') {
                 flush_word(tokens, word, line_count, column_count);

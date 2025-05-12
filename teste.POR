@@ -1,4 +1,1 @@
-a<-b
-a<=b
-a <> 100
-a<v
+"salve asd asdausdu 123123u12h3 123hu12h31uihuzxfhu asd as    "
