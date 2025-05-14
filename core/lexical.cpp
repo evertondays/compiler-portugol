@@ -160,7 +160,7 @@ std::vector<Token> lexer(std::ifstream& source_file) {
         }
 
         flush_word(tokens, word, line_count, column_count);
-        tokens.push_back(generate_token("ENDLINE", "", line_count, column_count));
+//        tokens.push_back(generate_token("ENDLINE", "", line_count, column_count));
         line_count++;
     }
 

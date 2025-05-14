@@ -1,3 +1,6 @@
+// Compiler options
+// core/lexical.cpp core/parser.cpp -o main
+
 #include "core/tokens.h"
 #include "core/lexical.h"
 #include "core/parser.h"
@@ -17,6 +20,8 @@ int main() {
 
     auto tokens = lexer(inputFile);
     write_tokens_to_file(tokens);
+
+    parser(tokens);
 
     inputFile.close();
     return 0;
