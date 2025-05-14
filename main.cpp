@@ -4,6 +4,7 @@
 #include <regex>
 #include <fstream>
 #include "tokens.h"
+#include "core/parser.h"
 
 const std::vector<TokenPattern> token_patterns = {
     {"ATE", std::regex("^até$")},
@@ -114,6 +115,13 @@ std::vector<Token> lexer(std::ifstream& source_file) {
 
             if (character == ' ') {
                 flush_word(tokens, word, line_count, column_count);
+                tokens.push_back(generate_token("SPACE", word, line_count, column_count));
+                continue;
+            }
+
+            if (character == '\t') {
+                flush_word(tokens, word, line_count, column_count);
+                tokens.push_back(generate_token("TAB", word, line_count, column_count));
                 continue;
             }
 
@@ -176,21 +184,21 @@ void write_tokens_to_file(const std::vector<Token>& tokens) {
     }
 
     for (const auto& token : tokens) {
+        if (token.type == "SEMICOLON" || token.type == "SPACE") {
+            continue;
+        }
+
         if (token.type == "ENDLINE") {
             output_file << std::endl;
             continue;
         }
 
-        if (token.type == "SEMICOLON") {
+        if (token.type == "TAB") {
+            output_file << "    ";
             continue;
         }
 
-        output_file << token.type << "(";
-
-        if (token_has_value(token.type)) {
-            output_file << token.value << ",";
-        }
-        output_file << token.line << ":" << token.column << ")";
+        output_file << token.type << " ";
     }
 
     output_file.close();

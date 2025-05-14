@@ -3,10 +3,6 @@ project(compiler_portugol)
 
 set(CMAKE_CXX_STANDARD 20)
 
+include_directories(core)
 
-set(SOURCE_FILES
-        tokens.cpp
-        main.cpp
-)
-
-add_executable(compiler_portugol ${SOURCE_FILES})
+add_executable(main main.cpp core/parser.cpp)
