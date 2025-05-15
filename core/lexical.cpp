@@ -31,7 +31,7 @@ const std::vector<TokenPattern> token_patterns = {
     {"PARFE", std::regex("^\\)$")},
     {"PASSO", std::regex("^passo$")},
     {"SE", std::regex("^se$")},
-    {"SENÃO", std::regex("^senão$")},
+    {"SENAO", std::regex("^senão$")},
     {"STRING", std::regex("^\"([^\"\\\\]|\\\\.)*\"$")},
     {"TIPO",  std::regex("^inteiro$")},
     {"OU", std::regex("^ou$")},
@@ -160,7 +160,7 @@ std::vector<Token> lexer(std::ifstream& source_file) {
         }
 
         flush_word(tokens, word, line_count, column_count);
-//        tokens.push_back(generate_token("ENDLINE", "", line_count, column_count));
+        tokens.push_back(generate_token("ENDLINE", "", line_count, column_count));
         line_count++;
     }
 
@@ -196,4 +196,26 @@ void write_tokens_to_file(const std::vector<Token>& tokens) {
 
     output_file.close();
     std::cout << "Tokens gravados no arquivo " << filename << std::endl;
+}
+
+bool validate_tokens(std::vector<Token>& tokens) {
+    for (const Token& token : tokens) {
+        if (token.type == "UNKNOWN") {
+            std::cout << ANSI_COLOR_RED << std::endl << "Token inválido!" << std::endl << "A palavra '" << token.value << "' não é reconhecido pela linguagem." << std::endl;
+            std::cout << "Linha: " << token.line << " Coluna: " << token.column << std::endl << ANSI_COLOR_RESET;
+            return false;
+        }
+    }
+    return true;
+}
+
+void clear_tokens(std::vector<Token>& tokens) {
+    auto new_end = std::remove_if(tokens.begin(), tokens.end(),
+        [](const Token& token) {
+            return token.type == "ENDLINE"
+                || token.type == "TAB"
+                || token.type == "SPACE";
+        });
+
+    tokens.erase(new_end, tokens.end());
 }

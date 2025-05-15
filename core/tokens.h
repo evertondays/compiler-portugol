@@ -19,4 +19,7 @@ struct TokenPattern {
 
 extern const std::vector<TokenPattern> token_patterns;
 
+const std::string ANSI_COLOR_RED = "\033[31m";
+const std::string ANSI_COLOR_RESET = "\033[0m";
+
 #endif

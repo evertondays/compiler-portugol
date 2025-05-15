@@ -24,7 +24,7 @@ std::vector<Instruction> init_instructions() {
     std::vector<Instruction> instructions;
 
     Instruction instruction;
-    instruction.tokens = {"MATH_OPERATION", "OPMAIS", "NUMINT"};
+    instruction.tokens = {"MATH_OPERATION", "OPMAIS", "MATH_OPERATION"};
     instruction.make = "MATH_OPERATION";
     instructions.push_back(instruction);
 
