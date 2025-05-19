@@ -132,29 +132,24 @@ std::vector<Token> lexer(std::ifstream& source_file) {
                     continue;
             }
 
-            if (antesessor_is_less_than) {
-                antesessor_is_less_than = false;
+			if (character == '<') {
+    			flush_word(tokens, word, line_count, column_count);
+    			word.clear();
+    			word += character;
+    			continue;
+			}
 
-                if (!word.empty()) {
-                    word.pop_back();
-                    flush_word(tokens, word, line_count, column_count);
-                }
-
-                if (character == '>' || character == '=' || character == '-') {
-                    word = "<";
+			if (!word.empty() && word == "<") {
+                if (character == '-' || character == '=' || character == '>') {
                     word += character;
                     flush_word(tokens, word, line_count, column_count);
                 } else {
-                    word = "<";
                     flush_word(tokens, word, line_count, column_count);
+                    word.clear();
+                    word += character;
                 }
-
-                continue;
-            }
-
-            if (character == '<') {
-                antesessor_is_less_than = true;
-            }
+    			continue;
+			}
 
             word += character;
         }

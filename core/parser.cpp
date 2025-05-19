@@ -27,28 +27,40 @@ std::vector<Instruction> init_instructions() {
 
     Instruction instruction;
 
+	// leia / escreva
+	instruction.tokens = {"ESCREVA", "PARAB", "NUMINT", "PARFE"};
+	instruction.is_final = true;
+    instructions.push_back(instruction);
+
+	instruction.tokens = {"ESCREVA", "PARAB", "ID", "PARFE"};
+	instruction.is_final = true;
+    instructions.push_back(instruction);
+
+	instruction.tokens = {"ESCREVA", "PARAB", "STRING", "PARFE"};
+	instruction.is_final = true;
+    instructions.push_back(instruction);
+
+	instruction.tokens = {"LEIA", "PARAB", "ID", "PARFE"};
+	instruction.is_final = true;
+    instructions.push_back(instruction);
+
 	// Operações matématicas
-	instruction.tokens = {"NUMINT"};
+    instruction.tokens = {"MATH_OPERATION_OR_NUM", "OPMAIS", "MATH_OPERATION_OR_NUM"};
     instruction.make = "MATH_OPERATION";
 	instruction.is_final = false;
     instructions.push_back(instruction);
 
-    instruction.tokens = {"MATH_OPERATION", "OPMAIS", "MATH_OPERATION"};
+	instruction.tokens = {"MATH_OPERATION_OR_NUM", "OPMENOS", "MATH_OPERATION_OR_NUM"};
     instruction.make = "MATH_OPERATION";
 	instruction.is_final = false;
     instructions.push_back(instruction);
 
-	instruction.tokens = {"MATH_OPERATION", "OPMENOS", "MATH_OPERATION"};
+	instruction.tokens = {"MATH_OPERATION_OR_NUM", "OPDIVI", "MATH_OPERATION_OR_NUM"};
     instruction.make = "MATH_OPERATION";
 	instruction.is_final = false;
     instructions.push_back(instruction);
 
-	instruction.tokens = {"MATH_OPERATION", "OPDIVI", "MATH_OPERATION"};
-    instruction.make = "MATH_OPERATION";
-	instruction.is_final = false;
-    instructions.push_back(instruction);
-
-	instruction.tokens = {"MATH_OPERATION", "OPMULTI", "MATH_OPERATION"};
+	instruction.tokens = {"MATH_OPERATION_OR_NUM", "OPMULTI", "MATH_OPERATION_OR_NUM"};
     instruction.make = "MATH_OPERATION";
 	instruction.is_final = false;
     instructions.push_back(instruction);
@@ -68,8 +80,72 @@ std::vector<Instruction> init_instructions() {
     instructions.push_back(instruction);
 
 	// Expressões logicas
+	instruction.tokens = {"ID_OR_NUM", "LOGIC_TOKEN", "ID_OR_NUM"};
+	instruction.make = "LOGIC_OPERATION";
+	instruction.is_final = false;
+    instructions.push_back(instruction);
+
+	instruction.tokens = {"ID_OR_NUM", "LOGIC_TOKEN", "LOGIC_OPERATION"};
+	instruction.make = "LOGIC_OPERATION";
+	instruction.is_final = false;
+    instructions.push_back(instruction);
+
+	instruction.tokens = {"LOGIC_OPERATION", "LOGIC_TOKEN", "LOGIC_OPERATION"};
+	instruction.make = "LOGIC_OPERATION";
+	instruction.is_final = false;
+    instructions.push_back(instruction);
+
+	instruction.tokens = {"PARAB", "LOGIC_OPERATION", "PARFE"};
+	instruction.make = "LOGIC_OPERATION";
+	instruction.is_final = false;
+    instructions.push_back(instruction);
+
+	instruction.tokens = {"NAO", "LOGIC_OPERATION"};
+	instruction.make = "LOGIC_OPERATION";
+	instruction.is_final = false;
+    instructions.push_back(instruction);
+
+	// Declaração de variaveis
+	//  instruction.tokens = {"TIPO", "ATR", "MATH_OPERATION"};
+	//	instruction.is_final = true;
+	//  instructions.push_back(instruction);
+
+	// se / para
+	instruction.tokens = {"SE", "LOGIC_OPERATION", "ENTAO", "SENAO", "FIMSE"};
+	instruction.is_final = true;
+    instructions.push_back(instruction);
+
+	instruction.tokens = {"SE", "LOGIC_OPERATION", "ENTAO", "FIMSE"};
+	instruction.is_final = true;
+    instructions.push_back(instruction);
+
+	instruction.tokens = {"PARA", "ID_OR_NUM", "ATE", "ID_OR_NUM", "PASSO", "ID_OR_NUM", "FIMPARA"};
+	instruction.is_final = true;
+    instructions.push_back(instruction);
+
+	instruction.tokens = {"PARA", "ID_OR_NUM", "ATE", "ID_OR_NUM", "FIMPARA"};
+	instruction.is_final = true;
+    instructions.push_back(instruction);
 
     return instructions;
+}
+
+bool tokens_are_equal(std::string queue_token, std::string instruction_token) {
+	if (instruction_token == "ID_OR_NUM") {
+		return queue_token == "ID" || queue_token == "NUMINT" || queue_token == "MATH_OPERATION";
+	}
+
+	if (instruction_token == "LOGIC_TOKEN") {
+		return queue_token == "LOGIGUAL" || queue_token == "LOGMAIOR" || queue_token == "LOGMAIORIGUAL"
+		|| queue_token == "LOGMAIORIGUAL" || queue_token == "LOGMENOR" || queue_token == "LOGMENORIGUAL"
+		|| queue_token == "LOGDIFF" || queue_token == "OU" || queue_token == "E";
+	}
+
+	if (instruction_token == "MATH_OPERATION_OR_NUM") {
+		return queue_token == "MATH_OPERATION" || queue_token == "NUMINT";
+	}
+
+	return queue_token == instruction_token;
 }
 
 ReduceResult try_reduce(int token_index, const std::vector<Token>& queue, const std::vector<Instruction>& instructions) {
@@ -82,7 +158,7 @@ ReduceResult try_reduce(int token_index, const std::vector<Token>& queue, const 
 		if (token_index - tokens_to_check + 1 < 0) continue;
 
 		for (int i = 0; i < tokens_to_check; ++i) {
-			if (instruction.tokens[i] != queue[token_index - i].type) {
+			if (!tokens_are_equal(queue[token_index - i].type, instruction.tokens[i])) {
 				match = false;
 				break;
 			}

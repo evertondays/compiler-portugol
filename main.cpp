@@ -34,6 +34,7 @@ int main() {
 
     std::cout << "Iniciando análise sintática . . ." << std::endl;
     parser(tokens);
+	std::cout << "Análise sintática concluída. (2/3)" << std::endl;
 
     return 0;
 }
