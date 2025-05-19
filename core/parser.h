@@ -3,6 +3,7 @@
 
 #include "tokens.h"
 
-void parser(std::vector<Token>& tokens, bool show_queue);
+std::vector<Token> parser(std::vector<Token> tokens);
+bool validate_parser(std::vector<Token> queue);
 
 #endif //PARSER_H

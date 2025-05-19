@@ -21,6 +21,7 @@ struct ReduceResult {
 
 const std::vector<Instruction> GrammarQueue;
 const std::vector<Instruction> InstructionsList;
+std::vector<std::string> log_lines;
 
 std::vector<Instruction> init_instructions() {
     std::vector<Instruction> instructions;
@@ -220,46 +221,64 @@ ReduceResult try_reduce(int token_index, const std::vector<Token>& queue, const 
 	return result;
 }
 
-void parser(std::vector<Token>& tokens, bool show_queue = false) {
-	auto instructions = init_instructions();
-	std::vector<Token> queue;
-	bool reduced = false;
+std::vector<Token> parser(std::vector<Token> tokens) {
+	std::string log_file_name = "build/parser.OBJ";
+    std::ofstream log_file(log_file_name);
+    auto instructions = init_instructions();
+    std::vector<Token> queue;
+    bool reduced = false;
 
-	while (!tokens.empty() || reduced) {
-		if (!tokens.empty()) {
-			queue.push_back(tokens.back());
-			tokens.pop_back();
-		}
+    while (!tokens.empty() || reduced) {
+        if (!tokens.empty()) {
+            Token token = tokens.back();
+            queue.push_back(token);
+            tokens.pop_back();
 
-		reduced = false;
+            log_file << "Adicionando a pilha: " << token.type << "\n";
+        }
 
-		for (int i = queue.size() - 1; i >= 0; --i) {
-			auto reduce_result = try_reduce(i, queue, instructions);
+        reduced = false;
 
-			if (reduce_result.success) {
-				Token reduced_token;
-				reduced_token.type = reduce_result.reduce;
+        for (int i = queue.size() - 1; i >= 0; --i) {
+            auto reduce_result = try_reduce(i, queue, instructions);
 
-				queue.erase(queue.begin() + (i - reduce_result.quantity_of_reduce_tokens + 1), queue.begin() + i + 1);
-				queue.insert(queue.begin() + (i - reduce_result.quantity_of_reduce_tokens + 1), reduced_token);
+            if (reduce_result.success) {
+                std::string reduced_types;
+                for (int j = i - reduce_result.quantity_of_reduce_tokens + 1; j <= i; ++j) {
+                    reduced_types += queue[j].type + (j < i ? ", " : "");
+                }
 
+                Token reduced_token;
+                reduced_token.type = reduce_result.reduce;
 
-				reduced = true;
-				break;
-			}
-		}
+                log_file << "Reduzindo tokens: [" << reduced_types << "] -> " << reduced_token.type << "\n";
 
-		if (!reduced && tokens.empty()) {
-			break;
-		}
+                queue.erase(queue.begin() + (i - reduce_result.quantity_of_reduce_tokens + 1), queue.begin() + i + 1);
+                queue.insert(queue.begin() + (i - reduce_result.quantity_of_reduce_tokens + 1), reduced_token);
+
+                reduced = true;
+                break;
+            }
+        }
+
+        if (!reduced && tokens.empty()) {
+            break;
+        }
+    }
+
+    log_file.close();
+	std::cout << "Logs da análise gravados no arquivo " << log_file_name << std::endl;
+
+	return queue;
+}
+
+bool validate_parser(std::vector<Token> queue) {
+	if (queue.size() == 1 && queue[0].type == "FINAL") {
+		return true;
 	}
 
-	if (show_queue) {
-		std::cout << "Queue final:" << std::endl;
-		for (const auto& item : queue) {
-			if (item.type != "FINAL") {
-				std::cout << item.type << std::endl;
-			}
-		}
-	}
+	std::cout << ANSI_COLOR_RED << std::endl << "Sintaxe inválida!" << std::endl;
+    std::cout << "Você pode verificar os logs dentro da pasta 'build' para debug." <<  ANSI_COLOR_RESET << std::endl;
+
+	return false;
 }

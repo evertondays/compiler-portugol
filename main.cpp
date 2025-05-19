@@ -33,7 +33,10 @@ int main() {
     std::cout << "Análise léxica concluída. (1/3)" << std::endl;
 
     std::cout << "Iniciando análise sintática . . ." << std::endl;
-    parser(tokens, false);
+    auto final_parser_queue = parser(tokens);
+	if (!validate_parser(final_parser_queue)) {
+		return 1;
+	}
 	std::cout << "Análise sintática concluída. (2/3)" << std::endl;
 
     return 0;
