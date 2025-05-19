@@ -81,7 +81,7 @@ std::vector<Instruction> init_instructions() {
 	instruction.make = "FINAL";
     instructions.push_back(instruction);
 
-	instruction.tokens = {"ID", "ATR", "ID"};
+	instruction.tokens = {"ID", "ATR", "ID_OR_NUM"};
 	instruction.is_final = true;
 	instruction.make = "FINAL";
     instructions.push_back(instruction);

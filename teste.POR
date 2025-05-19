@@ -1,10 +1,1 @@
-se a >= 12
-    então
-    leia(a)
-    leia(a)
-    leia(a)
-    leia(a)
-    leia(a)
-    senão
-    leia(a)
-fim_se
+a <- 1 / 12 * (12 + 2)
