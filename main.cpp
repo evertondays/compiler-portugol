@@ -1,9 +1,10 @@
 // Compiler options
-// core/lexical.cpp core/parser.cpp -o main
+// core/lexical.cpp core/parser.cpp core/semantic.cpp -o main
 
 #include "core/tokens.h"
 #include "core/lexical.h"
 #include "core/parser.h"
+#include "core/semantic.h"
 
 #include <iostream>
 #include <fstream>
@@ -38,6 +39,12 @@ int main() {
 		return 1;
 	}
 	std::cout << "Análise sintática concluída. (2/3)" << std::endl;
+
+	std::cout << "Iniciando análise semântica . . ." << std::endl;
+	if (!validate_semantic(tokens)) {
+		return 1;
+	}
+	std::cout << "Análise semântica concluída. (3/3)" << std::endl;
 
     return 0;
 }

@@ -1,1 +1,4 @@
-a <- 1 / 12 * (12 + 2)
+inteiro : a
+inteiro : b
+b <- 1
+inteiro : b

@@ -7,4 +7,6 @@ include_directories(core)
 
 add_executable(main main.cpp core/parser.cpp
         core/lexical.cpp
-        core/lexical.h)
+        core/lexical.h
+        core/semantic.cpp
+        core/semantic.h)
