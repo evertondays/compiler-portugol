@@ -36,6 +36,7 @@ const std::vector<TokenPattern> token_patterns = {
     {"TIPO",  std::regex("^inteiro$")},
     {"OU", std::regex("^ou$")},
     {"ATR", std::regex("^<-$")},
+	{"DOISPONTOS", std::regex("^:$")},
     {"ID",  std::regex("^[A-Za-zÀ-ÿ][A-Za-z0-9À-ÿ]*$")},
     {"SEMICOLON", std::regex("^;$")},// WE DON'T USE THIS
 };
@@ -125,6 +126,7 @@ std::vector<Token> lexer(std::ifstream& source_file) {
                 case '(':
                 case ')':
                 case ';':
+				case ':':
                 flush_word(tokens, word, line_count, column_count);
                     word += character;
                     tokens.push_back(identify_token(word, line_count, column_count));

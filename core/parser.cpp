@@ -27,21 +27,25 @@ std::vector<Instruction> init_instructions() {
 
     Instruction instruction;
 
-	// leia / escreva
+	// leia | escreva
 	instruction.tokens = {"ESCREVA", "PARAB", "NUMINT", "PARFE"};
 	instruction.is_final = true;
+	instruction.make = "FINAL";
     instructions.push_back(instruction);
 
 	instruction.tokens = {"ESCREVA", "PARAB", "ID", "PARFE"};
 	instruction.is_final = true;
+	instruction.make = "FINAL";
     instructions.push_back(instruction);
 
 	instruction.tokens = {"ESCREVA", "PARAB", "STRING", "PARFE"};
 	instruction.is_final = true;
+	instruction.make = "FINAL";
     instructions.push_back(instruction);
 
 	instruction.tokens = {"LEIA", "PARAB", "ID", "PARFE"};
 	instruction.is_final = true;
+	instruction.make = "FINAL";
     instructions.push_back(instruction);
 
 	// Operações matématicas
@@ -73,10 +77,12 @@ std::vector<Instruction> init_instructions() {
 	// Atribuições
 	instruction.tokens = {"ID", "ATR", "MATH_OPERATION"};
 	instruction.is_final = true;
+	instruction.make = "FINAL";
     instructions.push_back(instruction);
 
 	instruction.tokens = {"ID", "ATR", "ID"};
 	instruction.is_final = true;
+	instruction.make = "FINAL";
     instructions.push_back(instruction);
 
 	// Expressões logicas
@@ -106,11 +112,45 @@ std::vector<Instruction> init_instructions() {
     instructions.push_back(instruction);
 
 	// Declaração de variaveis
-	//  instruction.tokens = {"TIPO", "ATR", "MATH_OPERATION"};
-	//	instruction.is_final = true;
-	//  instructions.push_back(instruction);
+	instruction.tokens = {"TIPO", "DOISPONTOS", "ID", "SEMICOLON"};
+	instruction.is_final = true;
+	instruction.make = "FINAL";
+	instructions.push_back(instruction);
 
-	// se / para
+	instruction.tokens = {"TIPO", "DOISPONTOS", "ID"};
+	instruction.is_final = true;
+	instruction.make = "FINAL";
+	instructions.push_back(instruction);
+
+	// se
+	instruction.tokens = {"SE", "LOGIC_OPERATION", "ENTAO", "INSTRUCTIONS",  "SENAO", "INSTRUCTIONS", "FIMSE"};
+	instruction.is_final = true;
+	instruction.make = "FINAL";
+    instructions.push_back(instruction);
+
+	instruction.tokens = {"SE", "LOGIC_OPERATION", "ENTAO", "INSTRUCTIONS", "FIMSE"};
+	instruction.is_final = true;
+	instruction.make = "FINAL";
+    instructions.push_back(instruction);
+
+	// para
+	instruction.tokens = {"PARA", "ID_OR_NUM", "ATE", "ID_OR_NUM", "PASSO", "ID_OR_NUM", "INSTRUCTIONS", "FIMPARA"};
+	instruction.is_final = true;
+	instruction.make = "FINAL";
+    instructions.push_back(instruction);
+
+	instruction.tokens = {"PARA", "ID_OR_NUM", "ATE", "ID_OR_NUM", "INSTRUCTIONS", "FIMPARA"};
+	instruction.is_final = true;
+	instruction.make = "FINAL";
+    instructions.push_back(instruction);
+
+	// final
+	instruction.tokens = {"FINAL", "FINAL"};
+	instruction.is_final = true;
+	instruction.make = "FINAL";
+    instructions.push_back(instruction);
+
+	// se para sem instruções
 	instruction.tokens = {"SE", "LOGIC_OPERATION", "ENTAO", "SENAO", "FIMSE"};
 	instruction.is_final = true;
     instructions.push_back(instruction);
@@ -145,6 +185,10 @@ bool tokens_are_equal(std::string queue_token, std::string instruction_token) {
 		return queue_token == "MATH_OPERATION" || queue_token == "NUMINT";
 	}
 
+	if (instruction_token == "INSTRUCTIONS") {
+		return queue_token == "FINAL";
+	}
+
 	return queue_token == instruction_token;
 }
 
@@ -176,7 +220,7 @@ ReduceResult try_reduce(int token_index, const std::vector<Token>& queue, const 
 	return result;
 }
 
-void parser(std::vector<Token>& tokens) {
+void parser(std::vector<Token>& tokens, bool show_queue = false) {
 	auto instructions = init_instructions();
 	std::vector<Token> queue;
 	bool reduced = false;
@@ -197,10 +241,8 @@ void parser(std::vector<Token>& tokens) {
 				reduced_token.type = reduce_result.reduce;
 
 				queue.erase(queue.begin() + (i - reduce_result.quantity_of_reduce_tokens + 1), queue.begin() + i + 1);
+				queue.insert(queue.begin() + (i - reduce_result.quantity_of_reduce_tokens + 1), reduced_token);
 
-				if (!reduce_result.is_final) {
-					queue.insert(queue.begin() + (i - reduce_result.quantity_of_reduce_tokens + 1), reduced_token);
-				}
 
 				reduced = true;
 				break;
@@ -212,8 +254,12 @@ void parser(std::vector<Token>& tokens) {
 		}
 	}
 
-	std::cout << "Queue final:" << std::endl;
-	for (const auto& item : queue) {
-		std::cout << item.type << std::endl;
+	if (show_queue) {
+		std::cout << "Queue final:" << std::endl;
+		for (const auto& item : queue) {
+			if (item.type != "FINAL") {
+				std::cout << item.type << std::endl;
+			}
+		}
 	}
 }
