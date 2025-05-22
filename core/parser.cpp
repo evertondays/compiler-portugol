@@ -183,7 +183,7 @@ bool tokens_are_equal(std::string queue_token, std::string instruction_token) {
 	}
 
 	if (instruction_token == "MATH_OPERATION_OR_NUM") {
-		return queue_token == "MATH_OPERATION" || queue_token == "NUMINT";
+		return queue_token == "MATH_OPERATION" || queue_token == "NUMINT" || queue_token == "ID";
 	}
 
 	if (instruction_token == "INSTRUCTIONS") {
