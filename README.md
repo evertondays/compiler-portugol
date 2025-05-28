@@ -33,3 +33,5 @@ g++ core/lexical.cpp core/parser.cpp core/semantic.cpp main.cpp -o main
 ```bash
 ./main
 ```
+
+> ℹ️ **Os requisitos do projeto estão documentados em um arquivo PDF localizado na raiz deste repositório. Consulte o arquivo `Requisitos.pdf` para mais detalhes.**
