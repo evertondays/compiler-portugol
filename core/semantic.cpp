@@ -1,5 +1,5 @@
-#include "semantic.h"
-#include "tokens.h"
+#include "../include/semantic.h"
+#include "../include/tokens.h"
 
 #include <iostream>
 #include <fstream>

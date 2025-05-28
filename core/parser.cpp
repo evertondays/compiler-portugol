@@ -1,5 +1,5 @@
-#include "parser.h"
-#include "tokens.h"
+#include "../include/parser.h"
+#include "../include/tokens.h"
 
 #include <iostream>
 #include <fstream>

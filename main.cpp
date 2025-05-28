@@ -1,10 +1,10 @@
 // Compiler options
 // core/lexical.cpp core/parser.cpp core/semantic.cpp -o main
 
-#include "core/tokens.h"
-#include "core/lexical.h"
-#include "core/parser.h"
-#include "core/semantic.h"
+#include "include/tokens.h"
+#include "include/lexical.h"
+#include "include/parser.h"
+#include "include/semantic.h"
 
 #include <iostream>
 #include <fstream>

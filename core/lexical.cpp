@@ -1,5 +1,5 @@
-#include "tokens.h"
-#include "lexical.h"
+#include "../include/tokens.h"
+#include "../include/lexical.h"
 
 #include <iostream>
 #include <fstream>
