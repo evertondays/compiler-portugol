@@ -19,7 +19,9 @@ int main() {
     std::ifstream inputFile(file_path);
 
     if (!inputFile) {
-        std::cerr << "Não foi possível  abrir o arquivo.\nNome do arquivo esperado: " << file_path << std::endl;
+        std::cerr
+            << "Não foi possível  abrir o arquivo.\nNome do arquivo esperado: "
+            << file_path << std::endl;
         return 1;
     }
 
@@ -35,16 +37,16 @@ int main() {
 
     std::cout << "Iniciando análise sintática . . ." << std::endl;
     auto final_parser_queue = parser(tokens);
-	if (!validate_parser(final_parser_queue)) {
-		return 1;
-	}
-	std::cout << "Análise sintática concluída. (2/3)" << std::endl;
+    if (!validate_parser(final_parser_queue)) {
+        return 1;
+    }
+    std::cout << "Análise sintática concluída. (2/3)" << std::endl;
 
-	std::cout << "Iniciando análise semântica . . ." << std::endl;
-	if (!validate_semantic(tokens)) {
-		return 1;
-	}
-	std::cout << "Análise semântica concluída. (3/3)" << std::endl;
+    std::cout << "Iniciando análise semântica . . ." << std::endl;
+    if (!validate_semantic(tokens)) {
+        return 1;
+    }
+    std::cout << "Análise semântica concluída. (3/3)" << std::endl;
 
     return 0;
 }

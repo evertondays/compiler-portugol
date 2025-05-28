@@ -6,4 +6,4 @@ void write_tokens_to_file(const std::vector<Token>& tokens);
 void clear_tokens(std::vector<Token>& tokens);
 bool validate_tokens(std::vector<Token>& tokens);
 
-#endif //LEXICAL_H
+#endif  //LEXICAL_H

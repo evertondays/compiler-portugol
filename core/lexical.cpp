@@ -22,8 +22,8 @@ const std::vector<TokenPattern> token_patterns = {
     {"LOGMENORIGUAL", std::regex("^<=$")},
     {"NAO", std::regex("^não$")},
     {"NUMINT", std::regex("^[0-9]+$")},
-    {"OPDIVI",  std::regex("^/$")},
-    {"OPMAIS",  std::regex("^\\+$")},
+    {"OPDIVI", std::regex("^/$")},
+    {"OPMAIS", std::regex("^\\+$")},
     {"OPMENOS", std::regex("^\\-$")},
     {"OPMULTI", std::regex("^\\*$")},
     {"PARA", std::regex("^para$")},
@@ -33,15 +33,16 @@ const std::vector<TokenPattern> token_patterns = {
     {"SE", std::regex("^se$")},
     {"SENAO", std::regex("^senão$")},
     {"STRING", std::regex("^\"([^\"\\\\]|\\\\.)*\"$")},
-    {"TIPO",  std::regex("^inteiro$")},
+    {"TIPO", std::regex("^inteiro$")},
     {"OU", std::regex("^ou$")},
     {"ATR", std::regex("^<-$")},
-	{"DOISPONTOS", std::regex("^:$")},
-    {"ID",  std::regex("^[A-Za-zÀ-ÿ][A-Za-z0-9À-ÿ]*$")},
-    {"SEMICOLON", std::regex("^;$")},// WE DON'T USE THIS
+    {"DOISPONTOS", std::regex("^:$")},
+    {"ID", std::regex("^[A-Za-zÀ-ÿ][A-Za-z0-9À-ÿ]*$")},
+    {"SEMICOLON", std::regex("^;$")},  // WE DON'T USE THIS
 };
 
-Token generate_token(std::string type, std::string value, int line, int column) {
+Token generate_token(std::string type, std::string value, int line,
+                     int column) {
     Token token;
 
     token.value = value;
@@ -66,7 +67,8 @@ Token identify_token(std::string word, int line, int column) {
     return generate_token(token_type, word, line, column);
 }
 
-void flush_word(std::vector<Token>& tokens, std::string& word, int line_count, int column_count) {
+void flush_word(std::vector<Token>& tokens, std::string& word, int line_count,
+                int column_count) {
     if (!word.empty()) {
         tokens.push_back(identify_token(word, line_count, column_count));
         word.clear();
@@ -74,7 +76,8 @@ void flush_word(std::vector<Token>& tokens, std::string& word, int line_count, i
 }
 
 bool token_has_value(const std::string& type) {
-    return type == "NUMINT" || type == "ID" || type == "UNKNOWN" || type == "STRING";
+    return type == "NUMINT" || type == "ID" || type == "UNKNOWN" ||
+           type == "STRING";
 }
 
 std::vector<Token> lexer(std::ifstream& source_file) {
@@ -109,13 +112,15 @@ std::vector<Token> lexer(std::ifstream& source_file) {
 
             if (character == ' ') {
                 flush_word(tokens, word, line_count, column_count);
-                tokens.push_back(generate_token("SPACE", word, line_count, column_count));
+                tokens.push_back(
+                    generate_token("SPACE", word, line_count, column_count));
                 continue;
             }
 
             if (character == '\t') {
                 flush_word(tokens, word, line_count, column_count);
-                tokens.push_back(generate_token("TAB", word, line_count, column_count));
+                tokens.push_back(
+                    generate_token("TAB", word, line_count, column_count));
                 continue;
             }
 
@@ -126,22 +131,23 @@ std::vector<Token> lexer(std::ifstream& source_file) {
                 case '(':
                 case ')':
                 case ';':
-				case ':':
-                flush_word(tokens, word, line_count, column_count);
+                case ':':
+                    flush_word(tokens, word, line_count, column_count);
                     word += character;
-                    tokens.push_back(identify_token(word, line_count, column_count));
+                    tokens.push_back(
+                        identify_token(word, line_count, column_count));
                     word.clear();
                     continue;
             }
 
-			if (character == '<') {
-    			flush_word(tokens, word, line_count, column_count);
-    			word.clear();
-    			word += character;
-    			continue;
-			}
+            if (character == '<') {
+                flush_word(tokens, word, line_count, column_count);
+                word.clear();
+                word += character;
+                continue;
+            }
 
-			if (!word.empty() && word == "<") {
+            if (!word.empty() && word == "<") {
                 if (character == '-' || character == '=' || character == '>') {
                     word += character;
                     flush_word(tokens, word, line_count, column_count);
@@ -150,14 +156,15 @@ std::vector<Token> lexer(std::ifstream& source_file) {
                     word.clear();
                     word += character;
                 }
-    			continue;
-			}
+                continue;
+            }
 
             word += character;
         }
 
         flush_word(tokens, word, line_count, column_count);
-        tokens.push_back(generate_token("ENDLINE", "", line_count, column_count));
+        tokens.push_back(
+            generate_token("ENDLINE", "", line_count, column_count));
         line_count++;
     }
 
@@ -198,8 +205,13 @@ void write_tokens_to_file(const std::vector<Token>& tokens) {
 bool validate_tokens(std::vector<Token>& tokens) {
     for (const Token& token : tokens) {
         if (token.type == "UNKNOWN") {
-            std::cout << ANSI_COLOR_RED << std::endl << "Token inválido!" << std::endl << "A palavra '" << token.value << "' não é reconhecido pela linguagem." << std::endl;
-            std::cout << "Linha: " << token.line << " Coluna: " << token.column << std::endl << ANSI_COLOR_RESET;
+            std::cout << ANSI_COLOR_RED << std::endl
+                      << "Token inválido!" << std::endl
+                      << "A palavra '" << token.value
+                      << "' não é reconhecido pela linguagem." << std::endl;
+            std::cout << "Linha: " << token.line << " Coluna: " << token.column
+                      << std::endl
+                      << ANSI_COLOR_RESET;
             return false;
         }
     }
@@ -207,11 +219,10 @@ bool validate_tokens(std::vector<Token>& tokens) {
 }
 
 void clear_tokens(std::vector<Token>& tokens) {
-    auto new_end = std::remove_if(tokens.begin(), tokens.end(),
-        [](const Token& token) {
-            return token.type == "ENDLINE"
-                || token.type == "TAB"
-                || token.type == "SPACE";
+    auto new_end =
+        std::remove_if(tokens.begin(), tokens.end(), [](const Token& token) {
+            return token.type == "ENDLINE" || token.type == "TAB" ||
+                   token.type == "SPACE";
         });
 
     tokens.erase(new_end, tokens.end());

@@ -6,4 +6,4 @@
 std::vector<Token> parser(std::vector<Token> tokens);
 bool validate_parser(std::vector<Token> queue);
 
-#endif //PARSER_H
+#endif  //PARSER_H

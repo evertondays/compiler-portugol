@@ -5,4 +5,4 @@
 
 bool validate_semantic(std::vector<Token>& tokens);
 
-#endif //SEMANTIC_H
+#endif  //SEMANTIC_H
