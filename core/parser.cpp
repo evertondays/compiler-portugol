@@ -291,7 +291,7 @@ std::vector<Token> parser(std::vector<Token> tokens) {
     }
 
     log_file.close();
-    std::cout << "Logs da análise gravados no arquivo " << log_file_name
+    std::cout << "Logs do parser gravados no arquivo " << log_file_name
               << std::endl;
 
     return queue;

@@ -39,8 +39,7 @@ bool validate_semantic(std::vector<Token>& tokens) {
             std::cout << ANSI_COLOR_RED << std::endl
                       << "Variável não declarada!" << std::endl
                       << "A variável '" << token.value
-                      << "' está tenando ser acessada porém ainda não foi "
-                         "inicializada."
+                      << "' está tentando ser acessada, mas ainda não foi inicializada."
                       << std::endl;
             std::cout << "Linha: " << token.line << " Coluna: " << token.column
                       << std::endl

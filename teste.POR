@@ -13,7 +13,7 @@ se idade=soma então escreva(soma) senão escreva("soma") fim_se
 se idade>soma então escreva(soma) senão escreva("soma") fim_se
 se idade<soma então escreva(soma) senão escreva("soma") fim_se
 se idade<=soma então escreva(soma) senão escreva("soma") fim_se
-se idade>=soma então escreva(soma) senão escreva("soma") fim_se
+se idade>=soma então escreva(soma) senão escreva(soma) fim_se
 se idade<>soma então escreva(soma) senão escreva("soma") fim_se
 se idade=soma então escreva(soma) senão escreva("soma") fim_se
 se idade=soma e soma<>idade ou soma>idade ou soma<idade então escreva(soma) senão escreva("soma") fim_se

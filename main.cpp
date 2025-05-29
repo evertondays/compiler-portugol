@@ -48,5 +48,7 @@ int main() {
     }
     std::cout << "Análise semântica concluída. (3/3)" << std::endl;
 
+    std::cout << std::endl << "\033[32mProcesso de compilação completo!\033[0m" << std::endl << std::endl;
+
     return 0;
 }
