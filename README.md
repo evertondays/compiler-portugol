@@ -34,4 +34,4 @@ g++ core/lexical.cpp core/parser.cpp core/semantic.cpp main.cpp -o main
 ./main
 ```
 
-> ℹ️ **Os requisitos do projeto estão documentados em um arquivo PDF localizado na pasta github deste repositório. Consulte o arquivo `Requisitos.pdf` para mais detalhes.**
+> ℹ️ **Os requisitos do projeto estão documentados em um arquivo PDF localizado na pasta docs deste repositório. Consulte o arquivo `docs/Requisitos.pdf` para mais detalhes.**
