@@ -92,7 +92,8 @@ std::vector<Token> lexer(std::ifstream& source_file) {
         std::string word;
         bool is_string = false;
 
-        for (char character : line) {
+        for (size_t i = 0; i < line.length(); i++) {
+            char character = line[i];
             column_count++;
 
             if (is_string) {
@@ -141,21 +142,41 @@ std::vector<Token> lexer(std::ifstream& source_file) {
             }
 
             if (character == '<') {
+                char next_character = line[i + 1];
                 flush_word(tokens, word, line_count, column_count);
-                word.clear();
+
+                if (next_character == '>' || next_character == '=' || next_character == '-') {
+                    word = std::string(1, character) + next_character;
+                    flush_word(tokens, word, line_count, column_count);
+                    i = i + 1;
+                    continue;
+                }
+
                 word += character;
+                flush_word(tokens, word, line_count, column_count);
                 continue;
             }
 
-            if (!word.empty() && word == "<") {
-                if (character == '-' || character == '=' || character == '>') {
-                    word += character;
+            if (character == '>') {
+                char next_character = line[i + 1];
+                flush_word(tokens, word, line_count, column_count);
+
+                if (next_character == '=') {
+                    word = std::string(1, character) + next_character;
                     flush_word(tokens, word, line_count, column_count);
-                } else {
-                    flush_word(tokens, word, line_count, column_count);
-                    word.clear();
-                    word += character;
+                    i = i + 1;
+                    continue;
                 }
+
+                word += character;
+                flush_word(tokens, word, line_count, column_count);
+                continue;
+            }
+
+            if (character == '-' || character == '=') {
+                flush_word(tokens, word, line_count, column_count);
+                word += character;
+                flush_word(tokens, word, line_count, column_count);
                 continue;
             }
 
